@@ -55,15 +55,20 @@ class _LinkedInWebViewState extends State<LinkedInWebView> {
   }
   @override
   Widget build(BuildContext context) {
-    return WebviewScaffold(
-        url: getAuthorizationUrl(
+    return WillPopScope(
+      child: WebviewScaffold(
+          url: getAuthorizationUrl(
             clientId: widget.clientId ,
             clientSecret: widget.clientSecret,
             redirectUri: widget.redirectUri,
-        ),
-        appBar: widget.appBar,
-        clearCookies: widget.destroySession,
-        scrollBar: true
+          ),
+          appBar: widget.appBar,
+          clearCookies: widget.destroySession,
+          scrollBar: true
+      ),
+      onWillPop: () {
+        return _flutterWebviewPlugin.close();
+      },
     );
   }
 }
