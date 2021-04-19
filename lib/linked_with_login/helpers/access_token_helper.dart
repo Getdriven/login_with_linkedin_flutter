@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:loginwithlinkedin/linked_with_login/config/api_routes.dart';
 import 'package:loginwithlinkedin/linked_with_login/data_model/auth_error_response.dart';
@@ -10,10 +9,10 @@ import 'package:loginwithlinkedin/linked_with_login/data_model/auth_error_respon
 ///
 
 String getAccessTokenUrl({
-  @required String clientId,
-  @required String clientSecret,
-  @required String redirectUri,
-  @required String code,
+  required String clientId,
+  required String clientSecret,
+  required String redirectUri,
+  required String? code,
   String grantType = 'authorization_code',
 }) {
   return '$linkedInAccessTokenUrl?'
@@ -24,11 +23,11 @@ String getAccessTokenUrl({
       'redirect_uri=$redirectUri';
 }
 
-Future<String> getAccessToken({
-  @required String clientId,
-  @required String clientSecret,
-  @required String redirectUri,
-  @required String code,
+Future<String?> getAccessToken({
+  required String clientId,
+  required String clientSecret,
+  required String redirectUri,
+  required String? code,
   String grantType = 'code',
 }) async {
   final response = await http.get(Uri.parse(getAccessTokenUrl(

@@ -12,12 +12,12 @@ class LinkedInWebView extends StatefulWidget {
 
   final bool destroySession;
 
-  final PreferredSizeWidget appBar;
+  final PreferredSizeWidget? appBar;
 
   LinkedInWebView(
-      {@required this.clientId,
-      @required this.clientSecret,
-      @required this.redirectUri,
+      {required this.clientId,
+      required this.clientSecret,
+      required this.redirectUri,
       this.destroySession = true,
       this.appBar});
 
@@ -27,9 +27,9 @@ class LinkedInWebView extends StatefulWidget {
 
 class _LinkedInWebViewState extends State<LinkedInWebView> {
   final GlobalKey webViewKey = GlobalKey();
-  String _oldUrl;
+  String? _oldUrl;
 
-  InAppWebViewController webViewController;
+  InAppWebViewController? webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions();
 
   final urlController = TextEditingController();
