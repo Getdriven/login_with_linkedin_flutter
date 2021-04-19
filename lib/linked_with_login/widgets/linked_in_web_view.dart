@@ -55,32 +55,39 @@ class _LinkedInWebViewState extends State<LinkedInWebView> {
 
   @override
   Widget build(BuildContext context) {
-    return InAppWebView(
-      key: webViewKey,
-      initialUrlRequest: URLRequest(
-        url: Uri.parse(
-          getAuthorizationUrl(
-            clientId: widget.clientId,
-            clientSecret: widget.clientSecret,
-            redirectUri: widget.redirectUri,
+    return Column(
+      children: [
+        widget.appBar ?? const SizedBox(),
+        Expanded(
+          child: InAppWebView(
+            key: webViewKey,
+            initialUrlRequest: URLRequest(
+              url: Uri.parse(
+                getAuthorizationUrl(
+                  clientId: widget.clientId,
+                  clientSecret: widget.clientSecret,
+                  redirectUri: widget.redirectUri,
+                ),
+              ),
+            ),
+            initialOptions: options,
+            onWebViewCreated: (controller) {
+              webViewController = controller;
+            },
+            onLoadStart: (controller, url) {
+              _urlChanged(url.toString());
+            },
+            androidOnPermissionRequest: (controller, origin, resources) async {
+              return PermissionRequestResponse(
+                  resources: resources,
+                  action: PermissionRequestResponseAction.GRANT);
+            },
+            onLoadStop: (controller, url) async {
+              _urlChanged(url.toString());
+            },
           ),
         ),
-      ),
-      initialOptions: options,
-      onWebViewCreated: (controller) {
-        webViewController = controller;
-      },
-      onLoadStart: (controller, url) {
-        _urlChanged(url.toString());
-      },
-      androidOnPermissionRequest: (controller, origin, resources) async {
-        return PermissionRequestResponse(
-            resources: resources,
-            action: PermissionRequestResponseAction.GRANT);
-      },
-      onLoadStop: (controller, url) async {
-        _urlChanged(url.toString());
-      },
+      ],
     );
   }
 }
