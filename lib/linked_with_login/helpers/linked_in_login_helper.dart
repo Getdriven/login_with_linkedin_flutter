@@ -16,16 +16,16 @@ class LinkedInLogin {
 
   final BuildContext context;
 
-  String accessToken;
+  String? accessToken;
 
   LinkedInLogin(this.context,
-      {@required this.clientId,
-      @required this.clientSecret,
-      @required this.redirectUri,
+      {required this.clientId,
+      required this.clientSecret,
+      required this.redirectUri,
       this.accessToken});
 
-  Future<String> loginForAccessToken(
-      {PreferredSizeWidget appBar, bool destroySession = true}) async {
+  Future<String?> loginForAccessToken(
+      {PreferredSizeWidget? appBar, bool destroySession = true}) async {
     final authorizationData = await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -62,7 +62,7 @@ class LinkedInLogin {
   }
 
   Future<LinkedInProfile> getProfile(
-      {PreferredSizeWidget appBar,
+      {PreferredSizeWidget? appBar,
       bool destroySession = true,
       bool forceLogin = false}) async {
     if (accessToken == null || forceLogin)
@@ -77,7 +77,7 @@ class LinkedInLogin {
   }
 
   Future<LinkedInEmail> getEmail(
-      {PreferredSizeWidget appBar,
+      {PreferredSizeWidget? appBar,
       bool destroySession = true,
       bool forceLogin = false}) async {
     if (accessToken == null || forceLogin)

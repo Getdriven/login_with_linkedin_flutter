@@ -19,10 +19,10 @@ class LinkedInProfile {
         this.id,
     });
     
-    StName firstName;
-    StName lastName;
-    ProfilePicture profilePicture;
-    String id;
+    StName? firstName;
+    StName? lastName;
+    ProfilePicture? profilePicture;
+    String? id;
     
     factory LinkedInProfile.fromJson(Map<String, dynamic> json) => LinkedInProfile(
         firstName: StName.fromJson(json["firstName"]),
@@ -32,9 +32,9 @@ class LinkedInProfile {
     );
     
     Map<String, dynamic> toJson() => {
-        "firstName": firstName.toJson(),
-        "lastName": lastName.toJson(),
-        "profilePicture": profilePicture.toJson(),
+        "firstName": firstName!.toJson(),
+        "lastName": lastName!.toJson(),
+        "profilePicture": profilePicture!.toJson(),
         "id": id,
     };
 }
@@ -45,8 +45,8 @@ class StName {
         this.preferredLocale,
     });
     
-    Localized localized;
-    PreferredLocale preferredLocale;
+    Localized? localized;
+    PreferredLocale? preferredLocale;
     
     factory StName.fromJson(Map<String, dynamic> json) => StName(
         localized: Localized.fromJson(json["localized"]),
@@ -54,8 +54,8 @@ class StName {
     );
     
     Map<String, dynamic> toJson() => {
-        "localized": localized.toJson(),
-        "preferredLocale": preferredLocale.toJson(),
+        "localized": localized!.toJson(),
+        "preferredLocale": preferredLocale!.toJson(),
     };
 }
 
@@ -64,7 +64,7 @@ class Localized {
         this.enUs,
     });
     
-    String enUs;
+    String? enUs;
     
     factory Localized.fromJson(Map<String, dynamic> json) => Localized(
         enUs: json["en_US"],
@@ -81,8 +81,8 @@ class PreferredLocale {
         this.language,
     });
     
-    String country;
-    String language;
+    String? country;
+    String? language;
     
     factory PreferredLocale.fromJson(Map<String, dynamic> json) => PreferredLocale(
         country: json["country"],
@@ -101,8 +101,8 @@ class ProfilePicture {
         this.profilePictureDisplayImage,
     });
     
-    String displayImage;
-    DisplayImage profilePictureDisplayImage;
+    String? displayImage;
+    DisplayImage? profilePictureDisplayImage;
     
     factory ProfilePicture.fromJson(Map<String, dynamic> json) => ProfilePicture(
         displayImage: json["displayImage"],
@@ -111,7 +111,7 @@ class ProfilePicture {
     
     Map<String, dynamic> toJson() => {
         "displayImage": displayImage,
-        "displayImage~": profilePictureDisplayImage.toJson(),
+        "displayImage~": profilePictureDisplayImage!.toJson(),
     };
 }
 
@@ -121,8 +121,8 @@ class DisplayImage {
         this.elements,
     });
     
-    Paging paging;
-    List<Element> elements;
+    Paging? paging;
+    List<Element>? elements;
     
     factory DisplayImage.fromJson(Map<String, dynamic> json) => DisplayImage(
         paging: Paging.fromJson(json["paging"]),
@@ -130,8 +130,8 @@ class DisplayImage {
     );
     
     Map<String, dynamic> toJson() => {
-        "paging": paging.toJson(),
-        "elements": List<dynamic>.from(elements.map((x) => x.toJson())),
+        "paging": paging!.toJson(),
+        "elements": List<dynamic>.from(elements!.map((x) => x.toJson())),
     };
 }
 
@@ -143,10 +143,10 @@ class Element {
         this.identifiers,
     });
     
-    String artifact;
-    String authorizationMethod;
-    Data data;
-    List<Identifier> identifiers;
+    String? artifact;
+    String? authorizationMethod;
+    Data? data;
+    List<Identifier>? identifiers;
     
     factory Element.fromJson(Map<String, dynamic> json) => Element(
         artifact: json["artifact"],
@@ -158,8 +158,8 @@ class Element {
     Map<String, dynamic> toJson() => {
         "artifact": artifact,
         "authorizationMethod": authorizationMethod,
-        "data": data.toJson(),
-        "identifiers": List<dynamic>.from(identifiers.map((x) => x.toJson())),
+        "data": data!.toJson(),
+        "identifiers": List<dynamic>.from(identifiers!.map((x) => x.toJson())),
     };
 }
 
@@ -168,14 +168,14 @@ class Data {
         this.comLinkedinDigitalmediaMediaartifactStillImage,
     });
     
-    ComLinkedInDigitalMediaMediaArtifactStillImage comLinkedinDigitalmediaMediaartifactStillImage;
+    ComLinkedInDigitalMediaMediaArtifactStillImage? comLinkedinDigitalmediaMediaartifactStillImage;
     
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         comLinkedinDigitalmediaMediaartifactStillImage: ComLinkedInDigitalMediaMediaArtifactStillImage.fromJson(json["com.linkedin.digitalmedia.mediaartifact.StillImage"]),
     );
     
     Map<String, dynamic> toJson() => {
-        "com.linkedin.digitalmedia.mediaartifact.StillImage": comLinkedinDigitalmediaMediaartifactStillImage.toJson(),
+        "com.linkedin.digitalmedia.mediaartifact.StillImage": comLinkedinDigitalmediaMediaartifactStillImage!.toJson(),
     };
 }
 
@@ -189,12 +189,12 @@ class ComLinkedInDigitalMediaMediaArtifactStillImage {
         this.displayAspectRatio,
     });
     
-    String mediaType;
-    RawCodecSpec rawCodecSpec;
-    DisplaySize displaySize;
-    StorageSize storageSize;
-    AspectRatio storageAspectRatio;
-    AspectRatio displayAspectRatio;
+    String? mediaType;
+    RawCodecSpec? rawCodecSpec;
+    DisplaySize? displaySize;
+    StorageSize? storageSize;
+    AspectRatio? storageAspectRatio;
+    AspectRatio? displayAspectRatio;
     
     factory ComLinkedInDigitalMediaMediaArtifactStillImage.fromJson(Map<String, dynamic> json) => ComLinkedInDigitalMediaMediaArtifactStillImage(
         mediaType: json["mediaType"],
@@ -207,11 +207,11 @@ class ComLinkedInDigitalMediaMediaArtifactStillImage {
     
     Map<String, dynamic> toJson() => {
         "mediaType": mediaType,
-        "rawCodecSpec": rawCodecSpec.toJson(),
-        "displaySize": displaySize.toJson(),
-        "storageSize": storageSize.toJson(),
-        "storageAspectRatio": storageAspectRatio.toJson(),
-        "displayAspectRatio": displayAspectRatio.toJson(),
+        "rawCodecSpec": rawCodecSpec!.toJson(),
+        "displaySize": displaySize!.toJson(),
+        "storageSize": storageSize!.toJson(),
+        "storageAspectRatio": storageAspectRatio!.toJson(),
+        "displayAspectRatio": displayAspectRatio!.toJson(),
     };
 }
 
@@ -222,9 +222,9 @@ class AspectRatio {
         this.formatted,
     });
     
-    double widthAspect;
-    double heightAspect;
-    String formatted;
+    double? widthAspect;
+    double? heightAspect;
+    String? formatted;
     
     factory AspectRatio.fromJson(Map<String, dynamic> json) => AspectRatio(
         widthAspect: double.parse(json["widthAspect"].toString()),
@@ -246,9 +246,9 @@ class DisplaySize {
         this.height,
     });
     
-    double width;
-    String uom;
-    double height;
+    double? width;
+    String? uom;
+    double? height;
     
     factory DisplaySize.fromJson(Map<String, dynamic> json) => DisplaySize(
         width: double.parse(json["width"].toString()),
@@ -269,8 +269,8 @@ class RawCodecSpec {
         this.type,
     });
     
-    String name;
-    String type;
+    String? name;
+    String? type;
     
     factory RawCodecSpec.fromJson(Map<String, dynamic> json) => RawCodecSpec(
         name: json["name"],
@@ -289,8 +289,8 @@ class StorageSize {
         this.height,
     });
     
-    double width;
-    double height;
+    double? width;
+    double? height;
     
     factory StorageSize.fromJson(Map<String, dynamic> json) => StorageSize(
         width: double.parse(json["width"].toString()),
@@ -313,12 +313,12 @@ class Identifier {
         this.identifierExpiresInSeconds,
     });
     
-    String identifier;
-    int index;
-    String mediaType;
-    String file;
-    String identifierType;
-    int identifierExpiresInSeconds;
+    String? identifier;
+    int? index;
+    String? mediaType;
+    String? file;
+    String? identifierType;
+    int? identifierExpiresInSeconds;
     
     factory Identifier.fromJson(Map<String, dynamic> json) => Identifier(
         identifier: json["identifier"],
@@ -346,9 +346,9 @@ class Paging {
         this.links,
     });
     
-    int count;
-    int start;
-    List<dynamic> links;
+    int? count;
+    int? start;
+    List<dynamic>? links;
     
     factory Paging.fromJson(Map<String, dynamic> json) => Paging(
         count: json["count"],
@@ -359,6 +359,6 @@ class Paging {
     Map<String, dynamic> toJson() => {
         "count": count,
         "start": start,
-        "links": List<dynamic>.from(links.map((x) => x)),
+        "links": List<dynamic>.from(links!.map((x) => x)),
     };
 }

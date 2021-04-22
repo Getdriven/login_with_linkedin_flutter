@@ -15,8 +15,8 @@ class AuthorizationErrorResponse {
     });
 
     LinkedInAuthErrorType error;
-    String errorDescription;
-    int status ;
+    String? errorDescription;
+    int? status ;
     
     factory AuthorizationErrorResponse.fromJson(Map<String, dynamic> json) => AuthorizationErrorResponse(
         error: errorToAuthType(json["error"]),

@@ -16,14 +16,14 @@ class LinkedInEmail {
         this.elements,
     });
     
-    List<Element> elements;
+    List<Element>? elements;
     
     factory LinkedInEmail.fromJson(Map<String, dynamic> json) => LinkedInEmail(
         elements: List<Element>.from(json["elements"].map((x) => Element.fromJson(x))),
     );
     
     Map<String, dynamic> toJson() => {
-        "elements": List<dynamic>.from(elements.map((x) => x.toJson())),
+        "elements": List<dynamic>.from(elements!.map((x) => x.toJson())),
     };
 }
 
@@ -33,8 +33,8 @@ class Element {
         this.handle,
     });
     
-    Handle elementHandle;
-    String handle;
+    Handle? elementHandle;
+    String? handle;
     
     factory Element.fromJson(Map<String, dynamic> json) => Element(
         elementHandle: Handle.fromJson(json["handle~"]),
@@ -42,7 +42,7 @@ class Element {
     );
     
     Map<String, dynamic> toJson() => {
-        "handle~": elementHandle.toJson(),
+        "handle~": elementHandle!.toJson(),
         "handle": handle,
     };
 }
@@ -52,7 +52,7 @@ class Handle {
         this.emailAddress,
     });
     
-    String emailAddress;
+    String? emailAddress;
     
     factory Handle.fromJson(Map<String, dynamic> json) => Handle(
         emailAddress: json["emailAddress"],

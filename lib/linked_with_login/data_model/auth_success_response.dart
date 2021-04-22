@@ -14,8 +14,8 @@ class AuthorizationSuccessResponse {
         this.state,
     });
     
-    String code;
-    String state;
+    String? code;
+    String? state;
     
     factory AuthorizationSuccessResponse.fromJson(Map<String, dynamic> json) => AuthorizationSuccessResponse(
         code: json["code"],
