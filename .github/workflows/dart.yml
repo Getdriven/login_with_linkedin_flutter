@@ -1,0 +1,153 @@
+name: Test and push
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+# Update these variables in every project,
+env:
+  codecov_key: ${{ secrets.CODECOV_KEY }}
+  cloudsmith_path: get-driven-software-packages/flutter-packages
+  slack_webhook_url: ${{ secrets.SLACK_PACKAGES_DART }}
+
+jobs:
+  run_tests:
+    name: Flutter/Dart tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        name: Checkout repo
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+      - uses: actions/setup-java@v1
+        name: Setup Java
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v1
+        name: Download Flutter
+        with:
+          channel: 'stable'
+      - name: Setup Flutter
+        continue-on-error: false
+        run: |
+          flutter pub get
+          flutter packages pub run build_runner build --delete-conflicting-outputs
+          flutter pub global activate dartdoc
+          #TODO enable this once there are actual tests to run
+          #      - name: Run tests
+          #        run: |
+          #          flutter test --coverage
+
+      - uses: axel-op/dart-package-analyzer@v3
+        name: Running PANA (Package Anlyzer)
+        id: analysis
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+      #TODO enable this once there are actual tests to run
+      #      - name: Test analysis results
+      #        run: |
+      #          echo "Maintenance: ${{ steps.analysis.outputs.maintenance }}"
+      #          echo "Health: ${{ steps.analysis.outputs.health }}"
+
+      - name: Update documentation
+        run: |
+          rm -rf docs
+          flutter pub global run dartdoc:dartdoc --output docs --exclude 'dart:async,dart:collection,dart:convert,dart:core,dart:developer,dart:io,dart:isolate,dart:math,dart:typed_data,dart:ui,dart:ffi,dart:html,dart:js,dart:js_util'
+
+      - name: Commit files
+        continue-on-error: true
+        run: |
+          git add -A
+          git config --local user.email "softwarepackages@getdriven.app"
+          git config --local user.name "GitHub Action"
+          git commit -m "GA: Update documentation" -a
+      - name: Push changes
+        continue-on-error: true
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      #TODO enable this once there are actual tests to run
+      #      - uses: codecov/codecov-action@v1.0.2
+      #        name: Update code coverage
+      #        with:
+      #          token: ${{ env.codecov_key }}
+      - uses: 8398a7/action-slack@v3
+        name: Update Slack status
+        with:
+          status: custom
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+          custom_payload: |
+            {
+              username: 'action-slack',
+              icon_emoji: ':octocat:',
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                text: `Package actions\n${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) by ${process.env.AS_AUTHOR}\nMaintenance: ${{ steps.analysis.outputs.maintenance }}/100\nHealth: ${{ steps.analysis.outputs.health }}/100`,
+              }]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+          SLACK_WEBHOOK_URL: ${{ env.slack_webhook_url }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
+
+  push_to_cloudsmith:
+    needs: run_tests
+    name: Push to Cloudsmith
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "--------------------------------"
+          echo "SETTINGS"
+          echo "---------"
+          echo "Cloudsmith path: ${{ env.cloudsmith_path }}"
+          echo "--------------------------------"
+      - uses: actions/checkout@v1
+        name: Checkout repo
+      - uses: actions/setup-python@v1
+        name: Setup Python
+      - name: Generate UUID
+        id: generate-uuid
+        uses: filipstefansson/uuid-action@v1
+        with:
+          name: ${{ github.sha }}
+      - run: |
+          export UUID=${{ steps.generate-uuid.outputs.uuid }}
+      #        echo "{UUID}={$UUID}" >> $GITHUB_ENV
+      - name: Create tar
+        run: |
+          echo "Create tar"
+          tar --exclude='.dart_tool' -czf cloudsmith_package.tar.gz ./*
+      - name: Upload to Cloudsmith
+        run: |
+          echo "install Cloudsmith CLI"
+
+          pip3 install -U wheel --user
+          pip install cloudsmith-cli
+          echo "run CLI Commands"
+          export CLOUDSMITH_API_KEY=${{ secrets.CLOUDSMITH_API_KEY }}
+          cloudsmith whoami
+          cloudsmith --version
+          cloudsmith push dart ${{ env.cloudsmith_path }} cloudsmith_package.tar.gz
+      - uses: 8398a7/action-slack@v3
+        name: Update Slack status
+        with:
+          status: custom
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+          custom_payload: |
+            {
+              username: 'action-slack',
+              icon_emoji: ':octocat:',
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                text: `Cloudsmith upload\n${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) by ${process.env.AS_AUTHOR}`,
+              }]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+          SLACK_WEBHOOK_URL: ${{ env.slack_webhook_url }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
