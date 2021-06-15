@@ -76,24 +76,6 @@ jobs:
       #        name: Update code coverage
       #        with:
       #          token: ${{ env.codecov_key }}
-      - uses: 8398a7/action-slack@v3
-        name: Update Slack status
-        with:
-          status: custom
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-          custom_payload: |
-            {
-              username: 'action-slack',
-              icon_emoji: ':octocat:',
-              attachments: [{
-                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `Package actions\n${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) by ${process.env.AS_AUTHOR}\nMaintenance: ${{ steps.analysis.outputs.maintenance }}/100\nHealth: ${{ steps.analysis.outputs.health }}/100`,
-              }]
-            }
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
-          SLACK_WEBHOOK_URL: ${{ env.slack_webhook_url }} # required
-        if: always() # Pick up events even if the job fails or is canceled.
 
   push_to_cloudsmith:
     needs: run_tests
